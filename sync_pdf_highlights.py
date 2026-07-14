@@ -185,7 +185,7 @@ def main():
                     "highlighted_text": a["highlighted_text"],
                     "note": a["note"],
                     "location_label": f"Page {a['page']}",
-                    "original_link": pdf.get("webViewLink"),
+                    "original_link": f"https://drive.google.com/file/d/{pdf['id']}/view#page={a['page']}",
                 }
             )
 
