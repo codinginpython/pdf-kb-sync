@@ -1,0 +1,37 @@
+name: Sync PDF Annotations to Knowledge Base
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write Google service account key
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: echo "$GOOGLE_SERVICE_ACCOUNT_JSON" > service_account.json
+
+      - name: Sync annotations
+        env:
+          SOURCE_FOLDER_ID: ${{ secrets.SOURCE_FOLDER_ID }}
+          KB_API_BASE: ${{ secrets.KB_API_BASE }}
+          KB_API_TOKEN: ${{ secrets.KB_API_TOKEN }}
+        run: python sync_pdf_highlights.py
+
+      - name: Remove service account key
+        if: always()
+        run: rm -f service_account.json
