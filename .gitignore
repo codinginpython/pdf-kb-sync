@@ -1,0 +1,4 @@
+service_account.json
+downloaded_pdfs/
+__pycache__/
+*.pyc
